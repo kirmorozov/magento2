@@ -41,14 +41,21 @@ class DirectoryList
      *
      * @var string
      */
-    private $root;
+    private string $root;
 
     /**
      * Directories configurations
      *
      * @var array
      */
-    private $directories;
+    private array $directories;
+
+    /**
+     * Directories configurations cache
+     *
+     * @var array
+     */
+    static protected array $_dirCache = [];
 
     /**
      * Predefined types/paths
@@ -94,6 +101,13 @@ class DirectoryList
      */
     public function __construct($root, array $config = [])
     {
+        $hash = crc32($root . json_encode($config));
+        if (isset(self::$_dirCache[$hash])) {
+            $this->root        = &self::$_dirCache[$hash][0];
+            $this->directories = &self::$_dirCache[$hash][1];
+            return;
+        }
+
         static::validate($config);
         $this->root = $this->normalizePath($root);
         $this->directories = static::getDefaultConfig();
@@ -121,6 +135,8 @@ class DirectoryList
                 $this->assertUrlPath($dir[self::URL_PATH]);
             }
         }
+
+        self::$_dirCache[$hash] = array(&$this->root, &$this->directories);
     }
 
     /**

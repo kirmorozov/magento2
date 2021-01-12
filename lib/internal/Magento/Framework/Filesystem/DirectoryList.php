@@ -55,7 +55,7 @@ class DirectoryList
      *
      * @var array
      */
-    static protected array $_dirCache = [];
+    protected static $_dirCache = [];
 
     /**
      * Predefined types/paths
@@ -136,7 +136,7 @@ class DirectoryList
             }
         }
 
-        self::$_dirCache[$hash] = array(&$this->root, &$this->directories);
+        self::$_dirCache[$hash] = [&$this->root, &$this->directories];
     }
 
     /**

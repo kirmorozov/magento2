@@ -62,7 +62,7 @@ class Select extends \Zend_Db_Select
      * @param array $parts
      */
     public function __construct(
-        \Magento\Framework\DB\Adapter\Pdo\Mysql $adapter,
+        \Magento\Framework\DB\Adapter\AdapterInterface $adapter,
         \Magento\Framework\DB\Select\SelectRenderer $selectRenderer,
         $parts = []
     ) {

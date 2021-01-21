@@ -15,12 +15,12 @@ class Log extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     /**
      * Remote Address log type
      */
-    const TYPE_REMOTE_ADDRESS = 1;
+    const TYPE_REMOTE_ADDRESS = "1";
 
     /**
      * Type User Login Name
      */
-    const TYPE_LOGIN = 2;
+    const TYPE_LOGIN = "2";
 
     /**
      * Core Date
@@ -71,6 +71,7 @@ class Log extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     public function logAttempt($login)
     {
         if ($login != null) {
+            return $this;
             $this->getConnection()->insertOnDuplicate(
                 $this->getMainTable(),
                 [

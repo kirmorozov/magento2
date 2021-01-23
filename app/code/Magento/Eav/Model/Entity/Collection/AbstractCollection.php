@@ -1271,7 +1271,7 @@ abstract class AbstractCollection extends AbstractDb implements SourceProviderIn
      */
     protected function _addLoadAttributesSelectValues($select, $table, $type)
     {
-        $select->columns(['value' => 't_d.value']);
+        $select->columns(['value' => new \Zend_Db_Expr('t_d.value::text')]);
         return $select;
     }
 

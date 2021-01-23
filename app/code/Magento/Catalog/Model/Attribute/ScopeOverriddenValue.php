@@ -136,7 +136,7 @@ class ScopeOverriddenValue
             $selects = [];
             foreach ($attributeTables as $attributeTable => $attributeCodes) {
                 $select = $metadata->getEntityConnection()->select()
-                    ->from(['t' => $attributeTable], ['value' => 't.value', 'store_id' => 't.store_id'])
+                    ->from(['t' => $attributeTable], ['value' => new \Zend_Db_Expr('t.value::text'), 'store_id' => 't.store_id'])
                     ->join(
                         ['a' => $this->resourceConnection->getTableName('eav_attribute')],
                         'a.attribute_id = t.attribute_id',

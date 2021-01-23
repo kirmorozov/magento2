@@ -71,7 +71,6 @@ class Log extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     public function logAttempt($login)
     {
         if ($login != null) {
-            return $this;
             $this->getConnection()->insertOnDuplicate(
                 $this->getMainTable(),
                 [

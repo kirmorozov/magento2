@@ -55,15 +55,13 @@ class Logger
     {
         /** @var \Magento\Framework\DB\Adapter\AdapterInterface $connection */
         $connection = $this->resource->getConnection(ResourceConnection::DEFAULT_CONNECTION);
-        $connection->insertOnDuplicate(
-            $this->resource->getTableName(self::LOG_TABLE_NAME),
-            [
+        try {
+            $connection->insert($this->resource->getTableName(self::LOG_TABLE_NAME), [
                 'last_viewed_in_version' => $lastViewVersion,
-            ],
-            [
-                'last_viewed_in_version',
-            ]
-        );
+            ]);
+        } catch (\PDOException $e) {
+            //ignore exception, duplicate insert.
+        }
         return true;
     }
 

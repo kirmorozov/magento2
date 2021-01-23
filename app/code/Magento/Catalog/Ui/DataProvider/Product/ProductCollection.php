@@ -53,11 +53,20 @@ class ProductCollection extends \Magento\Catalog\Model\ResourceModel\Product\Col
     private function analyzeCount($sql)
     {
         $results = $this->getConnection()->query('EXPLAIN ' . $sql)->fetchAll();
-        $alias = $this->getMainTableAlias();
+        $alias = self::MAIN_TABLE_ALIAS;
 
         foreach ($results as $result) {
-            if ($result['table'] == $alias) {
+            if (isset($result['table']) && $result['table'] == $alias) {
                 return $result['rows'];
+            }
+            // Postgres Compatibility
+            if (isset($result['QUERY PLAN'])) {
+                $search = ($this->isEnabledFlat() ? $this->getEntity()->getFlatTableName()
+                        : $this->getEntity()->getEntityTable()) . ' ' . self::MAIN_TABLE_ALIAS;
+                $rows = explode('rows=', $result['QUERY PLAN']);
+                if (strpos($result['QUERY PLAN'], $search) && isset($rows[1])) {
+                    return (int)(explode(' ', $rows[1])[0]);
+                }
             }
         }
 

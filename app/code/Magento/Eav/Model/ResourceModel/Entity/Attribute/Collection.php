@@ -301,7 +301,7 @@ class Collection extends AbstractCollection
      */
     public function addAttributeGrouping()
     {
-        $this->getSelect()->group('main_table.attribute_id');
+        // $this->getSelect()->group('main_table.attribute_id');
         return $this;
     }
 

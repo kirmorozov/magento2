@@ -219,7 +219,9 @@ class AbstractCollection extends \Magento\Eav\Model\Entity\Collection\AbstractCo
             $valueExpr = $connection->getCheckSql('t_s.value_id IS NULL', 't_d.value', 't_s.value');
 
             $select->columns(
-                ['default_value' => 't_d.value', 'store_value' => 't_s.value', 'value' => $valueExpr]
+                ['default_value' => new \Zend_Db_Expr('t_d.value::text'),
+                    'store_value' => new \Zend_Db_Expr('t_s.value::text'),
+                    'value' => new \Zend_Db_Expr("($valueExpr)::text")]
             );
         } else {
             $select = parent::_addLoadAttributesSelectValues($select, $table, $type);

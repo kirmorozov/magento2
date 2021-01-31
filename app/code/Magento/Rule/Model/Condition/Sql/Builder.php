@@ -165,7 +165,7 @@ class Builder
             throw new \Magento\Framework\Exception\LocalizedException(__('Unknown condition operator'));
         }
 
-        $defaultValue = 0;
+        $defaultValue = $this->_connection->quote('0');
         //operator 'contains {}' is mapped to 'IN()' query that cannot work with substrings
         // adding mapping to 'LIKE %%'
         if ($condition->getInputType() === 'string'
@@ -191,10 +191,10 @@ class Builder
         // below is a solution for matching such conditions with selected values
         if (is_array($bindValue) && \in_array($conditionOperator, ['()', '{}'], true)) {
             foreach ($bindValue as $item) {
-                $expression .= $this->_connection->quoteInto(
-                    " OR (FIND_IN_SET (?, {$this->_connection->quoteIdentifier($argument)}) > 0)",
-                    $item
-                );
+                $expression .=
+                    " OR (" . $this->_connection->prepareSqlCondition(
+                        $this->_connection->quoteIdentifier($argument), ['finset' => $item]
+                    ) . ")";
             }
         }
         return $this->_expressionFactory->create(
@@ -278,16 +278,17 @@ class Builder
                 }
             }
 
+            $order_col = "__position" . time();
+
             if (!empty($conditions) && !empty($attributeField)) {
-                $conditions = $this->_connection->quote(
+                $conditions = array_map([$this->_connection, 'quote'],
                     array_map('trim', explode(',', $conditions))
                 );
                 $collection->getSelect()->reset(Select::ORDER);
-                $collection->getSelect()->order(
-                    $this->_expressionFactory->create(
-                        ['expression' => "FIELD($attributeField, $conditions)"]
-                    )
+                $collection->getSelect()->columns(
+                    [$order_col => $this->_connection->getFieldSql($attributeField, $conditions)]
                 );
+                $collection->getSelect()->order($order_col);
             }
         }
     }

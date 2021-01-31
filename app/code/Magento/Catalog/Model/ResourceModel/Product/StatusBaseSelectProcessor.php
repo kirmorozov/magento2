@@ -79,7 +79,10 @@ class StatusBaseSelectProcessor implements BaseSelectProcessorInterface
             []
         );
 
-        $select->where('IFNULL(status_attr.value, status_global_attr.value) = ?', Status::STATUS_ENABLED);
+        /** @var \Magento\Framework\DB\Adapter\AdapterInterface $_conn */
+        $_conn = $select->getAdapter();
+        $select->where($_conn->getIfNullSql('status_attr.value', 'status_global_attr.value') .
+            ' = ?', Status::STATUS_ENABLED);
 
         return $select;
     }

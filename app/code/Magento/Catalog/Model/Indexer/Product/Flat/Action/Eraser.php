@@ -111,7 +111,10 @@ class Eraser
             . 'product_table.' . $metadata->getLinkField(),
             []
         );
-        $select->where('IFNULL(status_attr.value, status_global_attr.value) = ?', Status::STATUS_DISABLED);
+        /** @var \Magento\Framework\DB\Adapter\AdapterInterface $_conn */
+        $_conn = $select->getAdapter();
+        $select->where($_conn->getIfNullSql('status_attr.value', 'status_global_attr.value') .
+            ' = ?', Status::STATUS_DISABLED);
 
         $result = $this->connection->query($select);
 

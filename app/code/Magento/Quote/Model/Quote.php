@@ -18,6 +18,7 @@ use Magento\Quote\Model\Quote\Address\Total as AddressTotal;
 use Magento\Sales\Model\Status;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\ObjectManager;
+use function PHPUnit\Framework\throwException;
 
 /**
  * Quote model
@@ -1019,6 +1020,9 @@ class Quote extends AbstractExtensibleModel implements \Magento\Quote\Api\Data\C
          */
         if (null === $this->_customer) {
             try {
+                if (!$this->getCustomerId()) {
+                    throw new \Magento\Framework\Exception\NoSuchEntityException();
+                }
                 $this->_customer = $this->customerRepository->getById($this->getCustomerId());
             } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
                 $this->_customer = $this->customerDataFactory->create();

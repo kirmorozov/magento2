@@ -81,9 +81,10 @@ class SearchResultApplier implements SearchResultApplierInterface
                     new \Zend_Db_Expr("price_index.min_price = 0, price_index.min_price {$sortDirection}")
                 );
         } else {
-            $orderList = join(',', $ids);
-            $this->collection->getSelect()
-                ->order(new \Zend_Db_Expr("FIELD(e.entity_id,$orderList)"));
+            $conn = $this->collection->getConnection();
+            $field = '__pos' . time();
+            $this->collection->getSelect()->columns([$field => $conn->getFieldSql('e.entity_id', $ids)]);
+            $this->collection->getSelect()->order($field);
         }
     }
 

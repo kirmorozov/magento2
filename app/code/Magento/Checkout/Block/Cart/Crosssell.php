@@ -155,7 +155,7 @@ class Crosssell extends AbstractProduct
                         $ninProductIds
                     )->setPageSize(
                         $this->_maxItemCount - count($items)
-                    )->setGroupBy()->setPositionOrder()->load();
+                    )->setPositionOrder()->load();
                     foreach ($collection as $item) {
                         $items[] = $item;
                     }

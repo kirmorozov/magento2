@@ -256,7 +256,7 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
         $manageStockExpr = $this->stockItem->getManageStockExpr('stock_item');
         $backordersExpr = $this->stockItem->getBackordersExpr('stock_item');
         $minQtyExpr = $this->getConnection()->getCheckSql(
-            'selection.selection_can_change_qty',
+            'selection.selection_can_change_qty > 0',
             $this->stockItem->getMinSaleQtyExpr('stock_item'),
             'selection.selection_qty'
         );

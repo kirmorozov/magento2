@@ -413,7 +413,7 @@ class DataProvider
         if ($backendType == 'datetime') {
             $expr = $this->connection->getDateFormatSql($field, '%Y-%m-%d %H:%i:%s');
         } else {
-            $expr = $field;
+            $expr = new \Zend_Db_Expr("($field)::text");
         }
 
         return $expr;

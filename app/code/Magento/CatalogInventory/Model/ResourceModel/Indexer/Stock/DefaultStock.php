@@ -256,10 +256,9 @@ class DefaultStock extends AbstractIndexer implements StockInterface
         )->where(
             'cis.website_id = ?',
             $this->getStockConfiguration()->getDefaultScopeId()
-        )->where('e.type_id = ?', $this->getTypeId())
-            ->group(['e.entity_id', 'cis.website_id', 'cis.stock_id']);
+        )->where('e.type_id = ?', $this->getTypeId());
 
-        $select->columns(['status' => $this->getStatusExpression($connection, true)]);
+        $select->columns(['status' => $this->getStatusExpression($connection)]);
         if ($entityIds !== null) {
             $select->where('e.entity_id IN(?)', $entityIds, \Zend_Db::INT_TYPE);
         }

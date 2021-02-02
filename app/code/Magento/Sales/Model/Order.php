@@ -2159,7 +2159,12 @@ class Order extends AbstractModel implements EntityInterface, OrderInterface
      */
     public function getItems()
     {
+        if (empty($this->getId())) {
+            return [];
+        }
+
         if ($this->getData(OrderInterface::ITEMS) == null) {
+
             $this->searchCriteriaBuilder->addFilter(OrderItemInterface::ORDER_ID, $this->getId());
 
             $searchCriteria = $this->searchCriteriaBuilder->create();
